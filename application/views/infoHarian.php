@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="id">
 
@@ -197,7 +195,7 @@
 </head>
 
 <body>
-    <div class="report-container">
+    <div class="report-container" id="capture">
         <!-- Header -->
         <div class="report-header">
             <h1 class="report-title">Laporan Kebersihan Kamar</h1>
