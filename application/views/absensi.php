@@ -22,7 +22,10 @@
                         </ul>
                     </div>
 
-                    <a href="<?= base_url() ?>" class="btn btn-info w-100 w-md-auto" data-page="dashboard">
+                    <a href="<?= base_url('absensi/reloadKamar/' . $waktu) ?>" class="btn btn-success w-100 w-md-auto">
+                        <i class="bi bi-building-add me-1"></i> Refreh Data Kamar
+                    </a>
+                    <a href="<?= base_url() ?>" class="btn btn-info w-100 w-md-auto">
                         <i class="bi bi-arrow-left me-1"></i> Kembali
                     </a>
                 </div>

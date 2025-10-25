@@ -76,6 +76,30 @@ class Absensi extends CI_Controller
             echo json_encode(['status' => 'error', 'komplek' => $jenis]);
         }
     }
+
+    public function reloadKamar($waktu)
+    {
+        $data['waktu'] = $waktu;
+        $data['tanggal'] = date('Y-m-d');
+
+        $dtkamar = fetchApiGet('https://data.ppdwk.com/api/datatables?data=pesantren-kamar-santri&page=1&per_page=100&q=&sortby=nama&sortbydesc=ASC', $this->token);
+        foreach ($dtkamar['data']['data'] as $key) {
+            $cek = $this->model->getBy2('absensi', 'tanggal', $data['tanggal'], 'kamar_id', $key['kamar_id'])->row();
+            if (!$cek) {
+                $data = [
+                    'komplek_id' => $key['asrama_id'],
+                    'kamar_id' => $key['kamar_id'],
+                    'nama' => $key['nama'],
+                    'jenis' => $key['asrama']['jenis_asrama'],
+                    'pagi' => 0,
+                    'sore' => 0,
+                    'tanggal' => $data['tanggal'],
+                ];
+                $this->model->simpan('absensi', $data);
+            }
+        }
+        redirect('absensi/input/' . $waktu);
+    }
 }
 
     // $dtkomplek = fetchApiGet('https://data.ppdwk.com/api/datatables?data=pesantren-asrama&page=1&per_page=10&q=&sortby=nama&sortbydesc=ASC', $this->token);
