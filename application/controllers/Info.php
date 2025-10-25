@@ -46,9 +46,9 @@ class Info extends CI_Controller
         $wktTambah5 = date('H:i', strtotime('+5 minutes'));
 
         if ($wktTambah5 == $w_pagi) {
-            file_get_contents($url_rekap . 'pagi/' . $tglini . '&filename=KEBERSIHAN_PAGI_' . $tglini);
+            callApi($url_rekap . 'pagi/' . $tglini . '&filename=KEBERSIHAN_PAGI_' . $tglini, '');
         } elseif ($wktTambah5 == $w_sore) {
-            file_get_contents($url_rekap . 'sore/' . $tglini . '&filename=KEBERSIHAN_SORE_' . $tglini);
+            callApi($url_rekap . 'sore/' . $tglini . '&filename=KEBERSIHAN_SORE_' . $tglini, '');
         } else {
             die('Tidak ada jadwal yang cocok');
         }

@@ -30,12 +30,30 @@ function callApi($url, $apiKey, $method = 'GET', $params = [])
     $ch = curl_init();
 
     if (strtoupper($method) === 'GET') {
-        // hanya apiKey
-        $query = http_build_query(['apiKey' => $apiKey]);
-        curl_setopt($ch, CURLOPT_URL, $url . '?' . $query);
+        // Buat query hanya jika ada apiKey atau params
+        $queryData = [];
+        if (!empty($apiKey)) {
+            $queryData['apiKey'] = $apiKey;
+        }
+
+        if (!empty($params)) {
+            $queryData = array_merge($queryData, $params);
+        }
+
+        // Tambahkan query string jika ada
+        if (!empty($queryData)) {
+            $url .= '?' . http_build_query($queryData);
+        }
+
+        curl_setopt($ch, CURLOPT_URL, $url);
     } else {
         // POST atau lainnya
-        $postData = array_merge(['apiKey' => $apiKey], $params);
+        $postData = $params;
+
+        if (!empty($apiKey)) {
+            $postData = array_merge(['apiKey' => $apiKey], $postData);
+        }
+
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
@@ -56,10 +74,11 @@ function callApi($url, $apiKey, $method = 'GET', $params = [])
 
     curl_close($ch);
 
-    // Jika JSON decode otomatis
+    // Decode otomatis jika response JSON
     $decoded = json_decode($response, true);
     return $decoded ?: $response;
 }
+
 
 function tanggalIndonesia($tanggal)
 {
