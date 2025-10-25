@@ -29,6 +29,7 @@
             --light-gray: #e9ecef;
             --success-light: #d4edda;
             --danger-light: #f8d7da;
+            --success-color: #8BC34A;
         }
 
         body {
@@ -127,6 +128,24 @@
 
         .dark-mode .table th {
             background-color: #3d3d3d;
+        }
+
+        /* Alert Custom */
+        .custom-alert {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, var(--success-color) 0%, #4CAF50 100%);
+            color: white;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #F44336 0%, #E53935 100%);
+            color: white;
         }
     </style>
 </head>

@@ -11,6 +11,10 @@ class Modeldata extends CI_Model
     {
         return $this->db->get_where($table, [$where => $dtwhere, $where1 => $dtwhere1]);
     }
+    public function getBy3($table, $where, $dtwhere, $where1, $dtwhere1, $where2, $dtwhere2)
+    {
+        return $this->db->get_where($table, [$where => $dtwhere, $where1 => $dtwhere1, $where2 => $dtwhere2]);
+    }
 
     public function simpan($table, $data)
     {
@@ -20,6 +24,17 @@ class Modeldata extends CI_Model
     {
         $this->db->where($where, $dtwhere);
         $this->db->update($table, $data);
+
+        if ($this->db->affected_rows() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public function hapus($table, $where, $dtwhere)
+    {
+        $this->db->where($where, $dtwhere);
+        $this->db->delete($table);
 
         if ($this->db->affected_rows() > 0) {
             return true;

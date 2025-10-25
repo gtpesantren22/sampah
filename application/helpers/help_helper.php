@@ -35,7 +35,7 @@ function callApi($url, $apiKey, $method = 'GET', $params = [])
         curl_setopt($ch, CURLOPT_URL, $url . '?' . $query);
     } else {
         // POST atau lainnya
-        $postData = ['apiKey' => $apiKey];
+        $postData = array_merge(['apiKey' => $apiKey], $params);
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
@@ -59,4 +59,45 @@ function callApi($url, $apiKey, $method = 'GET', $params = [])
     // Jika JSON decode otomatis
     $decoded = json_decode($response, true);
     return $decoded ?: $response;
+}
+
+function tanggalIndonesia($tanggal)
+{
+    // Array nama hari dan bulan dalam bahasa Indonesia
+    $hariIndo = [
+        'Sunday' => 'Minggu',
+        'Monday' => 'Senin',
+        'Tuesday' => 'Selasa',
+        'Wednesday' => 'Rabu',
+        'Thursday' => 'Kamis',
+        'Friday' => 'Jumat',
+        'Saturday' => 'Sabtu'
+    ];
+
+    $bulanIndo = [
+        1 => 'Januari',
+        2 => 'Februari',
+        3 => 'Maret',
+        4 => 'April',
+        5 => 'Mei',
+        6 => 'Juni',
+        7 => 'Juli',
+        8 => 'Agustus',
+        9 => 'September',
+        10 => 'Oktober',
+        11 => 'November',
+        12 => 'Desember'
+    ];
+
+    // Pastikan format input valid
+    $timestamp = strtotime($tanggal);
+    if (!$timestamp) return '-';
+
+    // Ambil nama hari & tanggal
+    $hari = $hariIndo[date('l', $timestamp)];
+    $tgl = date('j', $timestamp);
+    $bulan = $bulanIndo[(int)date('n', $timestamp)];
+    $tahun = date('Y', $timestamp);
+
+    return "$hari, $tgl $bulan $tahun";
 }

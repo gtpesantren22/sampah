@@ -180,7 +180,7 @@
             color: #666;
             font-size: 0.9rem;
             border-top: 1px solid #e9ecef;
-            margin-top: 20px;
+            margin-top: 5px;
         }
 
         /* Icon styling */
@@ -195,101 +195,107 @@
 </head>
 
 <body>
-    <div class="report-container" id="capture">
-        <!-- Header -->
-        <div class="report-header">
-            <h1 class="report-title">Laporan Kebersihan Kamar</h1>
-            <div class="report-subtitle">Kamar yang Sudah/Belum Membuang Sampah</div>
-            <div class="report-date">Hari Selasa, 21 Oktober 2025</div>
-        </div>
+    <div class="report-container">
+        <div id="capture">
+            <!-- Header -->
+            <div class="report-header">
+                <h1 class="report-title">Laporan Kebersihan Kamar (<?= $waktu ?>)</h1>
+                <div class="report-subtitle">Kamar yang Sudah/Belum Membuang Sampah</div>
+                <div class="report-date">Hari <?= tanggalIndonesia($tanggal) ?></div>
+            </div>
 
-        <!-- Stats Cards -->
-        <div class="row mx-0">
-            <div class="col-md-6 px-2">
-                <div class="stats-card">
-                    <div class="stats-number text-success">18</div>
-                    <div class="stats-label">Kamar Sudah Buang Sampah</div>
+            <!-- Stats Cards -->
+            <div class="row mx-0">
+                <div class="col-md-6 px-2">
+                    <div class="stats-card">
+                        <div class="stats-number text-success"><?= $sudah ?></div>
+                        <div class="stats-label">Kamar Sudah Buang Sampah</div>
+                    </div>
+                </div>
+                <div class="col-md-6 px-2">
+                    <div class="stats-card danger">
+                        <div class="stats-number text-danger"><?= $belum ?></div>
+                        <div class="stats-label">Kamar Belum Buang Sampah</div>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-6 px-2">
-                <div class="stats-card danger">
-                    <div class="stats-number text-danger">7</div>
-                    <div class="stats-label">Kamar Belum Buang Sampah</div>
+
+            <!-- Summary Section -->
+            <div class="summary-section">
+                <div class="summary-title">Ringkasan Kebersihan</div>
+                <div class="row">
+                    <?php
+                    $psrnPagi = round($pagi->sudah / ($pagi->sudah + $pagi->belum) * 100, 1);
+                    $psrnSore = round($sore->sudah / ($sore->sudah + $sore->belum) * 100, 1);
+                    ?>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Kebersihan Pagi</span>
+                            <span><?= $psrnPagi ?>%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: <?= $psrnPagi ?>%"></div>
+                        </div>
+                        <small class="text-muted"><?= $pagi->sudah ?> dari <?= $pagi->sudah + $pagi->belum ?> kamar sudah bersih</small>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>Kebersihan Sore</span>
+                            <span><?= $psrnSore ?>%</span>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar bg-info" role="progressbar" style="width: <?= $psrnSore ?>%"></div>
+                        </div>
+                        <small class="text-muted"><?= $sore->sudah ?> dari <?= $sore->sudah + $sore->belum ?> kamar sudah bersih</small>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Summary Section -->
-        <div class="summary-section">
-            <div class="summary-title">Ringkasan Kebersihan</div>
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <div class="d-flex justify-content-between mb-1">
-                        <span>Kebersihan Pagi</span>
-                        <span>72%</span>
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 72%"></div>
-                    </div>
-                    <small class="text-muted">18 dari 25 kamar sudah bersih</small>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <div class="d-flex justify-content-between mb-1">
-                        <span>Kebersihan Sore</span>
-                        <span>64%</span>
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar bg-info" role="progressbar" style="width: 64%"></div>
-                    </div>
-                    <small class="text-muted">16 dari 25 kamar sudah bersih</small>
-                </div>
-            </div>
-        </div>
-
-        <!-- Table -->
-        <div class="table-container">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th width="10%">No</th>
-                        <th width="35%">Kamar</th>
-                        <th width="25%">Pagi</th>
-                        <th width="25%">Sore</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php $no = 1;
-                    foreach ($data as $row): ?>
+            <!-- Table -->
+            <div class="table-container">
+                <table class="table table-hover">
+                    <thead>
                         <tr>
-                            <td><?= $no++ ?></td>
-                            <td class="kamar-name"><?= $row->nama ?></td>
-                            <td>
-                                <?php
-                                if ($row->pagi == 1) {
-                                    echo "<span class='status-badge status-sudah'><i class='bi bi-check-circle-fill me-1'></i> Sudah</span>";
-                                } else {
-                                    echo "<span class='status-badge status-belum'><i class='bi bi-x-circle-fill me-1'></i> Belum</span>";
-                                }
-                                ?>
-                            </td>
-                            <td>
-                                <?php
-                                if ($row->sore == 1) {
-                                    echo "<span class='status-badge status-sudah'><i class='bi bi-check-circle-fill me-1'></i> Sudah</span>";
-                                } else {
-                                    echo "<span class='status-badge status-belum'><i class='bi bi-x-circle-fill me-1'></i> Belum</span>";
-                                }
-                                ?>
-                            </td>
+                            <th width="10%">No</th>
+                            <th width="35%">Kamar</th>
+                            <th width="25%">Pagi</th>
+                            <th width="25%">Sore</th>
                         </tr>
-                    <?php endforeach ?>
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        <?php $no = 1;
+                        foreach ($data as $row): ?>
+                            <tr>
+                                <td><?= $no++ ?></td>
+                                <td class="kamar-name"><?= $row->nama ?></td>
+                                <td>
+                                    <?php
+                                    if ($row->pagi == 1) {
+                                        echo "<span class='status-badge status-sudah'><i class='bi bi-check-circle-fill me-1'></i> Sudah</span>";
+                                    } else {
+                                        echo "<span class='status-badge status-belum'><i class='bi bi-x-circle-fill me-1'></i> Belum</span>";
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    if ($row->sore == 1) {
+                                        echo "<span class='status-badge status-sudah'><i class='bi bi-check-circle-fill me-1'></i> Sudah</span>";
+                                    } else {
+                                        echo "<span class='status-badge status-belum'><i class='bi bi-x-circle-fill me-1'></i> Belum</span>";
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                        <?php endforeach ?>
+                    </tbody>
+                </table>
+            </div>
 
-        <!-- Footer Note -->
-        <div class="footer-note">
-            <i class="bi bi-info-circle me-1"></i> Laporan ini dihasilkan otomatis pada 21 Oktober 2025, 15:30 WIB
+            <!-- Footer Note -->
+            <div class="footer-note">
+                <i class="bi bi-info-circle me-1"></i> Laporan ini dihasilkan otomatis pada <?= tanggalIndonesia(date('Y-m-d')).', '. date('H:i') ?> WIB
+            </div>
         </div>
     </div>
 
